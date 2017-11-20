@@ -1,18 +1,17 @@
 //g++ Activity.cpp `root-config --libs --cflags` -o Activity
 
 
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
 #include <iomanip>
-//#include <TH1F.h>
-//#include <TH2D.h>
+#include <TH1F.h>
+#include <TH2D.h>
 #include <string>
 #include <vector>
-#include<math.h>
-//#include "TGraph.h"
+#include <math.h>
+#include "TGraph.h"
 #include <cstdlib>
-
-
+#include <TCanvas.h>
 using namespace std;
 
 using std::string;
@@ -21,10 +20,9 @@ using std::cin;
 
 void checkArgsNumber(int argNumber)
 {
-  if( 3 != argNumber )
+  if( 2!= argNumber )
   {
-      cout << "Please provide path to data file and its type" <<endl;
-      cout << "Accepted file types are: charge , amplitude , riseTime , fallTime , timeDifference" <<endl;
+      cout << "Please provide path to data file" <<endl;
       exit(1);
   }
 }
@@ -43,22 +41,17 @@ void checkFilePath(string filePath)
 
 int main(int argc, char **argv)
 {
-/*
 
 
+        checkArgsNumber(argc);
+
+        string filePath = argv[1];
+
+        checkFilePath(filePath);	
 
 
-	string filePath = argv[1];
-
-	checkArgsNumber(argc);
-  	checkFilePath(filePath);
-
-    	
-
-
-	//TApplication* theApp = new TApplication("App", &argc, argv);
 	    
-	TH2D *hist_Single = new TH2D("hist_Single","Activity",200,0,200,500,0,4000);
+	//TH2D *hist_Single = new TH2D("hist_Single","Activity",200,0,200,500,0,4000);
 	//TH1F *hist_Single = new TH1F("hist_Single","Activity",200,0,200);
 
 	double  my_Distance, my_CPS_average ;
@@ -73,48 +66,55 @@ int main(int argc, char **argv)
 
 	ifstream input;
 
-	//input.open("Source1.dat");
+	input.open(filePath.c_str());
 		
 
-    //while(!input.eof())
+    while(!input.eof())
 
-	//    {
-      	//		input>>my_Distance>>my_CPS_average ;
-	//			Distance.push_back(my_Distance);
-	//			CPS_average.push_back(my_CPS_average);
+	    {
+      			input>>my_Distance>>my_CPS_average ;
+				Distance.push_back(my_Distance);
+				CPS_average.push_back(my_CPS_average);
 
-	//		}
+			}
 	
 
 
 
 
+if(Distance.size()==0 || CPS_average.size()==0){
+
+	cout<<"Check the Data file"<<endl;
+
+	exit(5);
+	}
 
 
-
-
-
-
-
-
-	//TGraph *g = new TGraph(&Distance[0], &CPS_average[0]);								
-  	//g->Draw("AL");
-    
-
-
+	TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
+  	TCanvas *c= new TCanvas();
+	g->Draw("ACP");
+    	g->SetLineColor(kRed);
+	g->SetLineWidth(3);
+	g->SetLineStyle(1);
+	g->SetTitle("Measured Counts per second for different distances");
+	g->GetXaxis()->SetTitle("Distance [cm]");
+	g->GetXaxis()->SetTitleOffset(1.0);
+	g->GetYaxis()->SetTitle("Counts per Second [cps]");
+	g->GetYaxis()->SetTitleOffset(1.0);
+	c->SaveAs("AL.png");
 
 	
+	delete g;   
+
+	input.close();
+	
+	 return 0;
 
 
 
-	//theApp->Run();*/
-	      return 0;
 
 
-
-
-
-}
+	}
 
 
 ///****************************************************************The End**************************************************///
