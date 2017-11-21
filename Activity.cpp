@@ -12,6 +12,8 @@
 #include "TGraph.h"
 #include <cstdlib>
 #include <TCanvas.h>
+#include <TAttMarker.h>
+#include "TF1.h"
 using namespace std;
 
 using std::string;
@@ -72,7 +74,7 @@ int main(int argc, char **argv)
     while(!input.eof())
 
 	    {
-      			input>>my_Distance>>my_CPS_average ;
+	      			input>>my_Distance>>my_CPS_average ;
 				Distance.push_back(my_Distance);
 				CPS_average.push_back(my_CPS_average);
 
@@ -80,28 +82,34 @@ int main(int argc, char **argv)
 	
 
 
-
-
-if(Distance.size()==0 || CPS_average.size()==0){
+	if(Distance.size()==0 || CPS_average.size()==0){
 
 	cout<<"Check the Data file"<<endl;
 
 	exit(5);
+
+
 	}
 
 
 	TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
   	TCanvas *c= new TCanvas();
+
+	TF1 *f1 = new TF1("f1","(x*[0])/(x*x)",-150.0,150.0);
+
 	g->Draw("ACP");
     	g->SetLineColor(kRed);
-	g->SetLineWidth(3);
-	g->SetLineStyle(1);
-	g->SetTitle("Measured Counts per second for different distances");
+	g->SetLineWidth(1.5);
+	g->SetLineStyle(1.0);
+	g->SetMarkerStyle(kFullTriangleUp);
+//	g->SetMarkerWidth(1.0);
+	g->SetTitle(filePath.c_str());
 	g->GetXaxis()->SetTitle("Distance [cm]");
 	g->GetXaxis()->SetTitleOffset(1.0);
 	g->GetYaxis()->SetTitle("Counts per Second [cps]");
-	g->GetYaxis()->SetTitleOffset(1.0);
-	c->SaveAs("AL.png");
+	g->GetYaxis()->SetTitleOffset(1.3);
+   	g->Fit(f1);
+	c->SaveAs("Al.png");
 
 	
 	delete g;   
