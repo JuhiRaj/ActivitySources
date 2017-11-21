@@ -94,23 +94,25 @@ int main(int argc, char **argv)
 
 	TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
   	TCanvas *c= new TCanvas();
-
-	TF1 *f1 = new TF1("f1","(x*[0])/(x*x)",-150.0,150.0);
-
+	
+	TF1 *f1 = new TF1("f1","([0]/(pow((x+[1]),2)) + [2])",-150.0,150.0);
+	//TGraphErrors *gr = new TGraphErrors(n,x,y,ex,ey);
 	g->Draw("ACP");
     	g->SetLineColor(kRed);
 	g->SetLineWidth(1.5);
 	g->SetLineStyle(1.0);
 	g->SetMarkerStyle(kFullTriangleUp);
-//	g->SetMarkerWidth(1.0);
+
 	g->SetTitle(filePath.c_str());
+	
 	g->GetXaxis()->SetTitle("Distance [cm]");
 	g->GetXaxis()->SetTitleOffset(1.0);
 	g->GetYaxis()->SetTitle("Counts per Second [cps]");
 	g->GetYaxis()->SetTitleOffset(1.3);
    	g->Fit(f1);
+ 	c->SetLogy();
 	c->SaveAs("Al.png");
-
+	
 	
 	delete g;   
 
