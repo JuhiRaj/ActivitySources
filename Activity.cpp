@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include "TGraph.h"
+#include "TGraphErrors.h"
 #include <cstdlib>
 #include <TCanvas.h>
 #include <TAttMarker.h>
@@ -92,9 +92,9 @@ int main(int argc, char **argv)
 	}
 
 
-	TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
+	//TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
   	TCanvas *c= new TCanvas();
-	
+ 	TGraphErrors *g = new TGraphErrors(Distance.size(),&Distance[0],&CPS_average[0],0,0);
 	TF1 *f1 = new TF1("f1","([0]/(pow((x+[1]),2)) + [2])",-150.0,150.0);
 	//TGraphErrors *gr = new TGraphErrors(n,x,y,ex,ey);
 	g->Draw("ACP");
