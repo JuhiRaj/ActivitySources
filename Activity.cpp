@@ -60,6 +60,8 @@ int main(int argc, char **argv)
   	vector<double> Distance;
 	vector<double> CPS_average;                                // Empty Vector of Double
 
+	vector<double> eDistance;
+	vector<double> eCPS_average;                                // Empty Vector of Double
 
 
 
@@ -77,7 +79,8 @@ int main(int argc, char **argv)
 	      			input>>my_Distance>>my_CPS_average ;
 				Distance.push_back(my_Distance);
 				CPS_average.push_back(my_CPS_average);
-
+				eDistance.push_back(0.1);
+				eCPS_average.push_back(sqrt(my_CPS_average));
 			}
 	
 
@@ -94,8 +97,8 @@ int main(int argc, char **argv)
 
 	//TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
   	TCanvas *c= new TCanvas();
- 	TGraphErrors *g = new TGraphErrors(Distance.size(),&Distance[0],&CPS_average[0],0,0);
-	TF1 *f1 = new TF1("f1","([0]/(pow((x+[1]),2)) + [2])",-150.0,150.0);
+ 	TGraphErrors *g = new TGraphErrors(Distance.size(),&Distance[0],&CPS_average[0],&eDistance[0],&eCPS_average[0]);
+	TF1 *f1 = new TF1("f1","([0]/(pow((x),2)))+[1])",0.0,150.0);
 	//TGraphErrors *gr = new TGraphErrors(n,x,y,ex,ey);
 	g->Draw("ACP");
     	g->SetLineColor(kRed);
