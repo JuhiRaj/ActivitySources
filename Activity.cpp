@@ -98,8 +98,9 @@ int main(int argc, char **argv)
 	//TGraph *g = new TGraph(Distance.size(), &Distance[0], &CPS_average[0]);								
   	TCanvas *c= new TCanvas();
  	TGraphErrors *g = new TGraphErrors(Distance.size(),&Distance[0],&CPS_average[0],&eDistance[0],&eCPS_average[0]);
-	TF1 *f1 = new TF1("f1","([0]/(pow((x),2)))+[1])",0.0,150.0);
-	//TGraphErrors *gr = new TGraphErrors(n,x,y,ex,ey);
+	TF1 *f1 = new TF1("f1","(([0]/(pow((x),2)))+[1])",0.0,150.0);
+	//TGraphErrors *gr = new TGraphErrors(n,x,y,ex,ey);    TF1 *f1 = new TF1("f1","(([0]/(pow((x+[1]),2)))+[2])",0.0,150.0);  	TF1 *f1 = new TF1("f1","(([0]/(pow((x),2)))+[1])",0.0,150.0);
+
 	g->Draw("ACP");
     	g->SetLineColor(kRed);
 	g->SetLineWidth(1.5);
@@ -113,9 +114,12 @@ int main(int argc, char **argv)
 	g->GetYaxis()->SetTitle("Counts per Second [cps]");
 	g->GetYaxis()->SetTitleOffset(1.3);
    	g->Fit(f1);
+
+	double chi = f1->GetChisquare();    
+
  	c->SetLogy();
 	c->SaveAs("Al.png");
-	
+	cout<<"ChiSquare is"<<"	"<<chi<<endl;
 	
 	delete g;   
 
